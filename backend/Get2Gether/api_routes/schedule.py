@@ -11,19 +11,6 @@ from Get2Gether.utils.debug import pretty
 
 schedule_router = Blueprint("schedule", __name__)
 
-'''
-Meeting 1:
-Monday :  9AM - 5PM
-Tuesday:  9AM - 5PM
-
-Meeting 2: 
-not Monday:  9AM - 5PM!
-not Tuesday!
-'''
-
-
-
-
 
 @schedule_router.route("/schedule", methods=["GET"])
 def get_schedule():
@@ -32,30 +19,38 @@ def get_schedule():
 
         Parameters:
             - user_id
-            - 
+            - requested_presets = []
     """
 
     # 1. find the user with the user_id
 
     # 2. pull their calendar data from Google Calendar API
+        # - fill in an array with ones and zeros
 
-    # 3. pull their active event data (for scheduling with other events)
+    # 3. pull their presets from json
     
     return jsonify({
-        "some": "schedule"
+        "free_schedule": {
+            "09/04/2021": [1, 1, 1, 1, 0, 1, 1, 0],  
+            "10/04/2021": [1, 1, 1, 1, 0, 1, 1, 0],
+        },
+        "presets": [
+            "uni_timetable": [],  
+            "exercise",
+            "other_preset1"
+        ]
     })
 
-@schedule_router.route("/schedule", methods=["POST"])
-def add_schedule():
+
+@schedule_router.route("/save_schedule", methods=["POST"])
+def save_schedule():
     """
-        Adding a user's schedule/s        
+        Parameters:
+            - user_id
+            - new_schedule
     """
-
-
-
-    return jsonify({
-        "schedule": "added"
-    })
+    # 1. Overwrite previous schedule in the event for this person?
+    pass
 
 
 

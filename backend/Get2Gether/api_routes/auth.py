@@ -33,18 +33,6 @@ def one_off_login():
     return 
 
 
-@auth_router.route("/one_off", methods=["GET"])
-def one_off_login():
-    """
-        Logs in the user, if no cookie with uid exists generates and returns a new one
-
-        Parameters:
-            - username
-            - password [optional]   
-    """
-    
-    return 
-
 
 
 
@@ -53,7 +41,7 @@ def one_off_login():
 # Tutorial here: https://realpython.com/flask-google-login/#flask-login
 
 # ===== Google Authentication =====
-
+'''
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
@@ -148,3 +136,4 @@ def google_login_callback_handler():
         <div>Name: {}, Email: {}</div>
         <img src='{}'></img>
     """.format(user_name, user_email, user_image)
+'''

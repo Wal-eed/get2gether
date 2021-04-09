@@ -27,6 +27,9 @@ def add_event():
         Adding event/s        
     """
 
+    # 1. Add the event to the json file
+    # 2. Alert all the invited individuals
+
     return jsonify({
         "event": "added"
     })
