@@ -14,3 +14,8 @@ python3 -m pip install Flask
 ```
 python setup.py
 ```
+
+# Credits:
+
+Frontend template: https://github.com/cruip/open-react-template/ 
+

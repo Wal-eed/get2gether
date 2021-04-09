@@ -58,7 +58,6 @@ def get_schedule():
 
         Parameters:
             - user_id
-            - 
     """
 
     # retrieve the user's user id from session data
