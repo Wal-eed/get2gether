@@ -1,18 +1,24 @@
+from backend.Get2Gether import database
 from flask import (
     Blueprint,
+    json,
     render_template,
     request,
-    jsonify
+    jsonify,
+    session
 )
 import os
 from Get2Gether.exceptions import InvalidUserInput
 from Get2Gether.utils.colourisation import printColoured
 from Get2Gether.utils.debug import pretty
+from Get2Gether.database import database_util
 
 import uuid
 
 auth_router = Blueprint("auth", __name__)
 
+'''
+Outline for what user data will look like: 
 users = [
     {
         "name": "firstuser",
@@ -21,29 +27,86 @@ users = [
         "uuid": 1234567891011,
     }
 ]
+'''
 
-# Note: go with the Google auth approach
 
+
+# function stubs to implement
+# please fill this in to authenticate with google via oauth
+# note: the return values should be: the unique token for the user, the user's name and the user's email + phone number
+# see: register function for key names in the dictionary
+def authenticate_with_google() -> dict:
+    return ""
+
+
+# is_returning_user just determines if the current user thats trying to log in is a user we've seen before
+# ideally the best way to do this is check their google email, if the google email already exists in our database then they're a returning user :)
+def is_returning_user(user_google_data: dict) -> tuple(bool, json):
+    return False, None
+
+
+
+
+
+
+
+
+# registration handles the creation of a new user given their google details
 @auth_router.route("/register", methods=["POST"])
-def one_off_login():
-    """
-        
-    """
+def register():
     
+    # authenticate with google before publishing our data
+    user_google_data = authenticate_with_google()
+    # construct a json objet representing the user data
+    user_json_data = jsonify({
+        "name":         user_google_data["user_name"],
+        "email":        user_google_data["email"],
+        "phone":        user_google_data["phone"],
+        "google_token": user_google_data["token"],
+        "internal_uid":  uuid.uuid64(),
+        "presets":      [],
+    })
+
+    # save the user_json_data into the database
+    database_util.commit_data_to_key("user_data", "users", user_json_data)
+    session["user_uid"] = user_json_data.get("internal_uid")
+
+    # now create a user session
+    return "Registered User!", 200
+
+
+
+@auth_router.route("/login", methods=["POST"])
+def login():
+    # when a user attempts to login we first ask them to login with google
+    user_google_data = authenticate_with_google()
+    # now just determine if they're returning
+    is_returning, uid = is_returning_user(user_google_data)
+    if not is_returning_user:
+        # idk, deal with this somehow
+        return "Not a user", 403
+    else:
+        session["user_uid"] = uid
+        return "Logged In!", 200
+    
+
+
+
+# retrieve_user_data just gets the data associated with the currently logged in user
+@auth_router.route("/get_user_data", methods=["GET"])
+def retrieve_user_data():
+
+    # first determine if we have any session data for the user
+    if "user_uid" not in session:
+        return "Not Logged In!", 403
+    
+    user_database = database_util.get_json_file("user_data")
+    # TODO: iterate over every user in user_data, check if their UID matches our saved one
+    #       if the UID matches the pull the data
+
     return 
 
 
-@auth_router.route("/one_off", methods=["GET"])
-def one_off_login():
-    """
-        Logs in the user, if no cookie with uid exists generates and returns a new one
-
-        Parameters:
-            - username
-            - password [optional]   
-    """
-    
-    return 
 
 
 
