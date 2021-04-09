@@ -90,9 +90,9 @@ const Hero = ({
                 </h1>
                 <div className="container-xs">
                   <p>
-                    When2Meet, <em>but not shit</em>. 
-                    </p>
-                  <div>
+                    "When2Meet, <strong><em style={{fontFamily: "Garamond"}}>but not shit</em></strong>."
+                  </p>
+                  <div style={{marginTop: "200px"}}>
                     <SearchField startNewMeeting={startNewMeeting} />
                   </div>
                 </div>
