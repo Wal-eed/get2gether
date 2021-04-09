@@ -6,10 +6,12 @@ import Button from '../elements/Button';
 import Image from '../elements/Image';
 import Modal from '../elements/Modal';
 import SearchField from '../chronicle/SearchField';
+import FadeIn from 'react-fade-in';
 
 import Timetable from '../chronicle/Timetable';
 
-import glowStyles from './glow.scss';
+import './glow.scss';
+
 
 const propTypes = {
   ...SectionProps.types
@@ -18,6 +20,7 @@ const propTypes = {
 const defaultProps = {
   ...SectionProps.defaults
 }
+
 
 const Hero = ({
   className,
@@ -29,27 +32,6 @@ const Hero = ({
   invertColor,
   ...props
 }) => {
-
-  const [videoModalActive, setVideomodalactive] = useState(false);
-  
-  const [meetingName, setMeetingName] = useState(null);
-  /**
-   * 1. start
-   * 2. day-selection
-   * 3. timetable
-   * 4. invite
-   */
-  const [page, setPage] = useState("timetable");
-
-  const openModal = (e) => {
-    e.preventDefault();
-    setVideomodalactive(true);
-  }
-
-  const closeModal = (e) => {
-    e.preventDefault();
-    setVideomodalactive(false);
-  }   
 
   const outerClasses = classNames(
     'hero section center-content',
@@ -66,6 +48,21 @@ const Hero = ({
     bottomDivider && 'has-bottom-divider'
   );
 
+
+
+
+
+
+  /**
+   * 1. start
+   * 2. day-selection
+   * 3. timetable
+   * 4. invite
+   */
+  const [page, setPage] = useState("start");
+  const [meetingName, setMeetingName] = useState(null);
+
+
   const startNewMeeting = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target); 
@@ -81,41 +78,60 @@ const Hero = ({
       <div className="container-sm">
         <div className={innerClasses}>
           <div className="hero-content">
+                
             {(page === "start") && (
-              <>
-                <h1 className="mt-0 mb-16 reveal-from-bottom" data-reveal-delay="200">
+              <FadeIn
+                delay={600}
+                transitionDuration={1000}
+              >
+                {/* <Ass /> */}
+                <h1>
                   Get2Gether 🗨️
                 </h1>
                 <div className="container-xs">
-                  <p className="m-0 mb-32 reveal-from-bottom" data-reveal-delay="400">
+                  <p>
                     When2Meet, <em>but not shit</em>. 
                     </p>
-                  <div className="reveal-from-bottom" data-reveal-delay="1000" style={{ marginTop: "200px" }} >
+                  <div>
                     <SearchField startNewMeeting={startNewMeeting} />
                   </div>
                 </div>
-              </>
+              </FadeIn>
             )}
+            
+            
+
             {(page === "day-selection") && (
-              <>
-                <h3>
+              <FadeIn
+                delay={400}
+                transitionDuration={1000}
+              >
+                <h1>
                   Select days for <span className="glow">
                     {meetingName}
                   </span>
-                </h3>
+                </h1>
+                <Button color="primary" onClick={() => setPage("start")}>Back</Button>
                 <Button color="primary" onClick={() => setPage("timetable")}>Next</Button>
-              </>
+              </FadeIn>
             )}
             {(page === "timetable") && (
-              <>
+              <FadeIn
+                delay={400}
+                transitionDuration={1000}
+              >
                 <Timetable />
+                <Button color="primary" onClick={() => setPage("day-selection")}>Back</Button>
                 <Button color="primary" onClick={() => setPage("invite")}>Next</Button>
-              </>
+              </FadeIn>
             )}
             {(page === "invite") && (
-              <>
+              <FadeIn
+                delay={400}
+                transitionDuration={1000}
+              >
                 <Button color="primary" onClick={() => setPage("start")}>Back to start</Button>
-              </>
+              </FadeIn>
             )}
           </div>
         </div>

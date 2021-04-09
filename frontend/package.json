@@ -8,10 +8,12 @@
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-fade-in": "^2.0.1",
     "react-ga": "^2.7.0",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.1",
+    "react-transition-group": "^4.4.1"
   },
   "repository": {
     "type": "git",
