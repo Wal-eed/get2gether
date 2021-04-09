@@ -1,4 +1,3 @@
-from backend.Get2Gether import database
 from flask import (
     Blueprint,
     json,
@@ -11,7 +10,7 @@ import os
 from Get2Gether.exceptions import InvalidUserInput
 from Get2Gether.utils.colourisation import printColoured
 from Get2Gether.utils.debug import pretty
-from Get2Gether.database import database_util
+import Get2Gether.database
 import random
 import uuid
 
@@ -46,19 +45,19 @@ def authenticate_with_google() -> dict:
 
 # is_returning_user just determines if the current user thats trying to log in is a user we've seen before
 # ideally the best way to do this is check their google email, if the google email already exists in our database then they're a returning user :)
-def is_returning_user(user_google_data: dict) -> tuple(bool, json):
+def is_returning_user(user_google_data: dict):
     global google_user_ids
 
     for entry in google_user_ids:
         if entry["google_token"] == user_google_data["google_token"]:
-            return True, jsonify(entry)
-    return False, None
+            return (True, jsonify(entry))
+    return (False, None)
 
 
 
 
 # registration handles the creation of a new user given their google details
-@auth_router.route("/user/register", methods=["POST"])
+@auth_router.route("/register_user", methods=["POST"])
 def register():
     
     # authenticate with google before publishing our data
@@ -112,7 +111,7 @@ def retrieve_user_data():
     user_json_data = json.loads(user_database)
     for user in user_json_data:
         if user.get("internal_uid") == session["user_uid"]:
-            user.set("google_token") = ""
+            user.set("google_token", "")
             return jsonify(user), 200
 
 

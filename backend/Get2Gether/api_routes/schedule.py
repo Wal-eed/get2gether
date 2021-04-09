@@ -28,7 +28,7 @@ not Tuesday!
 
 # the core of this section, given a user's google key retrieves their calendar and blocked regions in the discussed
 # [0, 1, 1, 0, 1] matrix format
-def get_user_google_calendar(user_google_token: str, week_start: time, week_end: time) -> list(list):
+def get_user_google_calendar(user_google_token: str, week_start: time, week_end: time):
     # Hardcoding results :)
     if user_google_token == "abcde123":
         return [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],

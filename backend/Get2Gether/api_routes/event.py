@@ -1,4 +1,3 @@
-from backend.Get2Gether.database.database_util import commit_data_to_key
 import uuid
 from flask import (
     Blueprint,
@@ -12,8 +11,7 @@ import os
 from Get2Gether.exceptions import InvalidUserInput
 from Get2Gether.utils.colourisation import printColoured
 from Get2Gether.utils.debug import pretty
-from Get2Gether.database import database_util
-
+import Get2Gether.database 
 
 event_router = Blueprint("event", __name__)
 DOMAIN_NAME = "localhost:5000"
@@ -21,7 +19,7 @@ DOMAIN_NAME = "localhost:5000"
 
 
 # sends and email to all the invitees
-def notify_invitees(invitee_emails: list(str)) -> bool:
+def notify_invitees(invitee_emails: list) -> bool:
     return True
 
 
