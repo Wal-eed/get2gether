@@ -7,6 +7,8 @@ import Image from '../elements/Image';
 import Modal from '../elements/Modal';
 import SearchField from '../chronicle/SearchField';
 
+import Timetable from '../chronicle/Timetable';
+
 import glowStyles from './glow.scss';
 
 const propTypes = {
@@ -37,7 +39,7 @@ const Hero = ({
    * 3. timetable
    * 4. invite
    */
-  const [page, setPage] = useState("invite");
+  const [page, setPage] = useState("timetable");
 
   const openModal = (e) => {
     e.preventDefault();
@@ -106,6 +108,7 @@ const Hero = ({
             )}
             {(page === "timetable") && (
               <>
+                <Timetable />
                 <Button color="primary" onClick={() => setPage("invite")}>Next</Button>
               </>
             )}

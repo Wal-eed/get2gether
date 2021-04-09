@@ -1,0 +1,81 @@
+
+// .container {
+// 	position: absolute;
+// 	top: 50%;
+// 	left: 50%;
+// 	transform: translate(-50%, -50%);
+// }
+
+.time-brick {
+    padding: 10px;
+    width: 100px;
+    &:hover {
+    }
+}
+
+.time-brick-selected {
+    background-color: blue;
+    transition: all
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
+table {
+    border-collapse: separate!important;
+    border-spacing: 10px!important;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th, td {
+    text-align: center;
+	padding: 15px;
+	background-color: rgba(255, 255, 255, 0.041);
+	color: #fff;
+}
+
+th {
+	text-align: left;
+}
+
+thead {
+	th {
+		background-color: transparent;
+        text-align: center;
+        width: 100px;
+	}
+}
+
+tbody {
+    tr {
+        transition: all 0.2s;
+        &:hover {
+            background-color: rgba(15, 1, 139, 0.3);
+            transition-duration: 0.2s;
+		}
+	}
+	td {
+        position: relative;
+		&:hover {
+			&:before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -9999px;
+				bottom: -9999px;
+				background-color: rgba(72, 57, 233, 0.2);
+				z-index: -1;
+			}
+		}
+	}
+}
