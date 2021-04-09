@@ -1,0 +1,29 @@
+
+{
+    "name": "tim’s cool event",
+    "id": 123,
+    "users": {
+        "user_id_0": {
+            "is_organiser": true,
+            "answered_email": true,
+            "times": [1234]
+        },
+        "user_id_1": {
+            "is_organiser": false,
+            "answered_email": true,
+            "times": [1234, 5678]
+        },
+        "user_id_2": {
+            "is_organiser": false,
+            "answered_email": true,
+            "times": [1234, 5678]
+        }
+    },
+    "location": {
+        "link": "www.google.com",
+        "long": 123456.222,
+        "lat": 5678.222
+    }
+    
+    
+}

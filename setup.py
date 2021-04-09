@@ -8,5 +8,5 @@ def hello():
     return "test.exe"
 
 
-if __name__ == '__main__':
+if __name__ == _'__main__':
     app.run()
