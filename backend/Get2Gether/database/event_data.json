@@ -1,8 +1,8 @@
 {
     "events": [
         {
-            "name": "Chronicle Hackathon Meeting",
-            "id": 123456789,
+            "event_name": "Chronicle Hackathon Meeting",
+            "event_id": 123456789,
             "location": {
                 "link": "https://www.unsw.edu.au/",
                 "venue": "UNSW",
