@@ -2,14 +2,53 @@ from flask import (
     Blueprint,
     render_template,
     request,
-    jsonify
+    jsonify,
+    session
 )
-import os
+import time
 from Get2Gether.exceptions import InvalidUserInput
 from Get2Gether.utils.colourisation import printColoured
 from Get2Gether.utils.debug import pretty
+from Get2Gether.database import database_util
+
 
 schedule_router = Blueprint("schedule", __name__)
+
+'''
+Meeting 1:
+Monday :  9AM - 5PM
+Tuesday:  9AM - 5PM
+
+Meeting 2: 
+not Monday:  9AM - 5PM!
+not Tuesday!
+'''
+
+
+
+# the core of this section, given a user's google key retrieves their calendar and blocked regions in the discussed
+# [0, 1, 1, 0, 1] matrix format
+def get_user_google_calendar(user_google_token: str, week_start: time, week_end: time):
+    # Hardcoding results :)
+    if user_google_token == "abcde123":
+        return [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    else:
+        return [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0], # basically toy data
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+
+
 
 
 @schedule_router.route("/schedule", methods=["GET"])
@@ -19,38 +58,39 @@ def get_schedule():
 
         Parameters:
             - user_id
-            - requested_presets = []
     """
 
-    # 1. find the user with the user_id
+    # retrieve the user's user id from session data
+    # first determine if we have any session data for the user
+    if "user_uid" not in session:
+        return "Not Logged In!", 403
 
-    # 2. pull their calendar data from Google Calendar API
-        # - fill in an array with ones and zeros
+    user_id = session["user_uid"]
+    user_database = database_util.get_json_file("user_data")
+    current_user_data = user_database.get(user_id)
+    user_presets = current_user_data.get("presets")
+    user_google_calendar = get_user_google_calendar(
+        current_user_data["google_token"], 
+        request.args.get("week_start"), request.args.get("week_end")
+    )
 
-    # 3. pull their presets from json
-    
+
+
     return jsonify({
-        "free_schedule": {
-            "09/04/2021": [1, 1, 1, 1, 0, 1, 1, 0],  
-            "10/04/2021": [1, 1, 1, 1, 0, 1, 1, 0],
-        },
-        "presets": [
-            "uni_timetable": [],  
-            "exercise",
-            "other_preset1"
-        ]
-    })
+        "user_calendar": user_google_calendar,
+        "user_presets": user_presets
+    }), 200
 
 
-@schedule_router.route("/save_schedule", methods=["POST"])
-def save_schedule():
+@schedule_router.route("/schedule", methods=["POST"])
+def add_user_preset():
     """
-        Parameters:
-            - user_id
-            - new_schedule
+        Adding a preset to the user data     
     """
-    # 1. Overwrite previous schedule in the event for this person?
-    pass
+    # TODO: fill this in after the creation of an event
+
+
+    return "added", 200
 
 
 

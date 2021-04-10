@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Database</title>
+    </head>
+    <body>
+        <form action="/api/test/db" method="POST">
+            <button type="submit">Wipe users</button>
+        </form>
+        <h2>USERS IN THE DATABASE:</h2>
+        <ul>
+            {% for user in users %}
+                <li>
+                    <!-- <div>
+                        <strong>ID:</strong> {{ user._id }}
+                    </div> -->
+                    <div>
+                        <strong>Name:</strong> {{ user.name }}
+                    </div>
+                    <div>
+                        <strong>Email:</strong> {{ user.email }}
+                    </div>
+                    <div>
+                        <strong>Password:</strong> {{ user.password }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <hr />
+        <h2>COURSES IN THE DATABASE (LESSONS VERSION):</h2>
+        <ul>
+            {{ courses_lessons }}
+        </ul>
+        <hr />
+        <h2>COURSES IN THE DATABASE (ALL VERSION):</h2>
+        <ul>
+            {% for course in courses_all %}
+                <li>
+                    <div>
+                        <strong>Course ID/name:</strong> {{ course.title }}
+                    </div>
+                    <div>
+                        <strong>The whole document: </strong>{{ course }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
