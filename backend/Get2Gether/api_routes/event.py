@@ -11,7 +11,7 @@ import os
 from Get2Gether.exceptions import InvalidUserInput
 from Get2Gether.utils.colourisation import printColoured
 from Get2Gether.utils.debug import pretty
-import Get2Gether.database 
+from Get2Gether.database import database_util
 
 event_router = Blueprint("event", __name__)
 DOMAIN_NAME = "localhost:5000"
@@ -55,14 +55,17 @@ def event_register():
 
     event_id = req.get("event_id")
     user_data = jsonify({
-        is_orgainser: False,
+        is_organiser: False,
         answered_email: True,
+        # This should be a list of lists
         free_schedule: {
             get_free_schedule_from_req(req)
         }
     })
 
-    commit_data_to_key("event_data", str(event_id) + str(session["user_id"]), user_data)
+    # Second argument (requested_key) might need to be changed
+    # depending on the layout of the json
+    database_util.commit_data_to_key("event_data", str(event_id) + str(session["user_id"]), user_data)
     return jsonify({
         "event": "registered for event",
     }), 200
@@ -90,7 +93,7 @@ def add_event():
             }
         }
     })
-    commit_data_to_key("event_data", str(event_id), raw_event_data)
+    database_util.commit_data_to_key("event_data", str(event_id), raw_event_data)
     # now just email all the invitees with valid emails
     notify_invitees(json.loads(
         req.get("atendee_emails")

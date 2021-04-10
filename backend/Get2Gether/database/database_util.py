@@ -13,11 +13,9 @@ from flask import (
 def commit_data_to_key(source_file: str, requested_key: str, data: dict) -> bool:
     database = get_json_file(source_file)
 
-    # Not sure which way to update the dict
-    # depends on how the function is called
-    #
-    # database[requested_key] = data
-    # database.update(data)
+    # Adds data to the list (e.g. of users or of events)
+    # Doesn't actually update existing items
+    database[requested_key].append(data)
 
     save_json_file(source_file, database)
     
@@ -38,6 +36,7 @@ def save_json_file(source_file: str, database: dict):
 
     with open(source_url, 'w') as json_file:
         json.dump(database, json_file)
+
 
 def json_url(source_file: str) -> str:
     # app.root_path == backend/Get2Gether

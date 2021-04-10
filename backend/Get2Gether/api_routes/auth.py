@@ -10,7 +10,7 @@ import os
 from Get2Gether.exceptions import InvalidUserInput
 from Get2Gether.utils.colourisation import printColoured
 from Get2Gether.utils.debug import pretty
-import Get2Gether.database
+from Get2Gether.database import database_util
 import random
 import uuid
 
