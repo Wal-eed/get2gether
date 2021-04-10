@@ -1,15 +1,8 @@
 from flask import (
     Blueprint,
-    json,
-    render_template,
-    request,
     jsonify,
     session
 )
-import os
-from Get2Gether.exceptions import InvalidUserInput
-from Get2Gether.utils.colourisation import printColoured
-from Get2Gether.utils.debug import pretty
 from Get2Gether.database import database_util
 import random
 import uuid
@@ -17,17 +10,20 @@ import uuid
 auth_router = Blueprint("auth", __name__)
 
 
-google_user_ids = [{
-    "user_name": "jason derulo",
-    "email": "jason.d@gmail.com",
-    "phone": 130065506,
-    "google_token": "abcde123"
+
+# this is temporary test data 
+google_user_ids = [
+    {
+        "user_name": "jason derulo",
+        "email": "jason.d@gmail.com",
+        "phone": 130065506,
+        "google_token": "abcde123"
     },
     {
-    "user_name": "elton john",
-    "email": "ej@gmail.com",
-    "phone": 130065506,
-    "google_token": "eeetswalad"
+        "user_name": "elton john",
+        "email": "ej@gmail.com",
+        "phone": 130065506,
+        "google_token": "eeetswalad"
     }
 ]
 
@@ -48,51 +44,60 @@ def authenticate_with_google() -> dict:
 def is_returning_user(user_google_data: dict):
     global google_user_ids
 
-    for entry in google_user_ids:
-        if entry["google_token"] == user_google_data["google_token"]:
-            return (True, jsonify(entry))
+    user_database = database_util.get_json_file("user_data")
+    for user in user_database:
+        if user["google_token"] == user_google_data["token"]:
+            return (True, user)
     return (False, None)
 
 
 
 
 # registration handles the creation of a new user given their google details
-@auth_router.route("/register_user", methods=["POST"])
+@auth_router.route("/user/register", methods=["POST"])
 def register():
     
     # authenticate with google before publishing our data
     user_google_data = authenticate_with_google()
+
     # construct a json objet representing the user data
-    user_json_data = jsonify({
+    internal_uid = uuid.uuid64()
+    # save the user_json_data into the database
+    user_database = database_util.get_json_file("user_data")
+    user_database["users"].append({
         "name":         user_google_data["user_name"],
         "email":        user_google_data["email"],
         "phone":        user_google_data["phone"],
         "google_token": user_google_data["token"],
-        "internal_uid":  uuid.uuid64(),
+        "internal_uid":  internal_uid,
         "presets":      [],
     })
+    database_util.save_json_file("user_data", user_database)
+    
+    # finally construct a session so we can keep track of the user in the future
+    session["user_uid"] = internal_uid
+    return jsonify({
+        "Status": "Successful",
+    }), 200
 
-    # save the user_json_data into the database
-    database_util.commit_data_to_key("user_data", "users", user_json_data)
-    session["user_uid"] = user_json_data.get("internal_uid")
-
-    # now create a user session
-    return "Registered User!", 200
 
 
-
+# login just authenticates a user and passes their authentication over to google OAuth
 @auth_router.route("/user/login", methods=["POST"])
 def login():
     # when a user attempts to login we first ask them to login with google
     user_google_data = authenticate_with_google()
-    # now just determine if they're returning
-    is_returning, uid = is_returning_user(user_google_data)
+    # now just determine if they're returning user e.g (if they've "signed up" with google in the past)
+    is_returning, user_data = is_returning_user(user_google_data)
     if not is_returning:
-        # idk, deal with this somehow
-        return "Not a user", 403
+        return jsonify({
+            "Status": "Invalid login",
+        }), 403
     else:
-        session["user_uid"] = uid
-        return "Logged In!", 200
+        session["user_uid"] = user_data["internal_uid"]
+        return jsonify({
+            "Status": "Successful",
+        }), 200
     
 
 
@@ -103,23 +108,29 @@ def retrieve_user_data():
 
     # first determine if we have any session data for the user
     if "user_uid" not in session:
-        return "Not Logged In!", 403
+        return jsonify({
+            "Status": "Not logged in!",
+        }), 403
     
+    # open up the user database and iterate over every user
     user_database = database_util.get_json_file("user_data")
-    # TODO: iterate over every user in user_data, check if their UID matches our saved one
-    #       if the UID matches the pull the data
-    user_json_data = json.loads(user_database)
-    for user in user_json_data:
-        if user.get("internal_uid") == session["user_uid"]:
-            user.set("google_token", "")
-            return jsonify(user), 200
+    for user in user_database:
+        # if the user uid matches our saved UID then thats the one, remove the token and return the results
+        if user["internal_uid"] == session["user_uid"]:
+            user["google_token"] = ""
+            return jsonify({
+                "Status": "Successful",
+                "Data": user
+            }), 200
+
+    return jsonify({
+        "Status": "Couldn't find user",
+    }), 404
 
 
-    return "", 404
 
 
-
-
+# retrieve_user_contacts does what it says
 @auth_router.route("/user/retrieve_contacts", methods=["GET"])
 def retrieve_user_contacts():
     # first determine if we have any session data for the user
@@ -127,21 +138,12 @@ def retrieve_user_contacts():
         return "Not Logged In!", 403
     
     user_database = database_util.get_json_file("user_data")
-    user_json_data = json.loads(user_database)
     contacts = []
 
-    for user in user_json_data:
-        if user.get("internal_uid") == session["user_uid"]:
-            if user.get("google_token") == "abcde123":
-                contacts.append({
-                    "contact_name": "elton john",
-                    "email": "ej@gmail.com"
-                })
-            else:
-                contacts.append({
-                    "contact_name": "jason derulo",
-                    "email": "jason.d@gmail.com",
-                })
+    for user in user_database:
+        if user["internal_uid"] == session["user_uid"]:
+            user_google_token = user["google_token"]
+            # TODO: implement contact retrieval via google API
     return contacts
 
 
