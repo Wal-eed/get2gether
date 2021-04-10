@@ -1,0 +1,30 @@
+.days-selector {
+    background-color: white;
+    transition: all 0.1s ease-in-out;
+    padding: 10px;
+    width: 100px!important;
+    height: 550px;
+    &:hover {
+        transform: scale(1.1);
+        background-color: lightblue;
+        transition-duration: 0.1s;
+    }
+}
+
+.selected {
+    padding: 10px;
+    width: 100px!important;
+    height: 550px;
+    transform: scale(1.12);
+    background-color: rgb(76, 76, 187);
+    color: white!important;
+    transition: all 0.2s ease-in-out;
+}
+
+.chevron {
+    height: 100%;
+    vertical-align: middle;
+    &:hover {
+        transform: scale(1.2);
+    }
+}

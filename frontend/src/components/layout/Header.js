@@ -29,10 +29,12 @@ const Header = ({
   hideSignin,
   bottomOuterDivider,
   bottomDivider,
+  username,
   ...props
 }) => {
 
   const [isActive, setIsactive] = useState(false);
+
 
   const nav = useRef(null);
   const hamburger = useRef(null);
@@ -88,7 +90,7 @@ const Header = ({
             bottomDivider && 'has-bottom-divider'
           )}>
           {/* <Logo /> */}
-          <FaCalendarAlt style={{ fontSize: "200%" }} />
+          <FaCalendarAlt onClick={() => window.location.reload()} style={{ fontSize: "200%" }} />
           {!hideNav &&
             <>
               <button
@@ -115,7 +117,15 @@ const Header = ({
                     >
                       <li>
                         <Link to="#0" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>
-                          <FaGoogle style={{"margin-right": "15px"}} /> Google Sign In 
+                          {window.localStorage.getItem("loggedIn") ? (
+                            <>
+                              Welcome {window.localStorage.getItem("loggedIn")}
+                            </>
+                          ) : (
+                            <>
+                              <FaGoogle style={{"margin-right": "15px"}} /> Google Sign In 
+                            </>
+                          )}
                         </Link>
                       </li>
                     </ul>}

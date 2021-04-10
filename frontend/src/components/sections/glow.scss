@@ -50,3 +50,10 @@
     }
 }
   
+.copyButton {
+    transition: all 0.25s ease-in-out;
+    &:hover {
+        transform: scale(1.5);
+        transition-duration: 0.25s;
+    }
+}

@@ -13,7 +13,7 @@
 
 .time-brick-selected {
     background-color: blue;
-    transition: all
+    transition: all;
 }
 
 .noselect {
@@ -57,13 +57,16 @@ tbody {
     tr {
         transition: all 0.2s;
         &:hover {
-            background-color: rgba(15, 1, 139, 0.3);
+            // background-color: rgba(15, 1, 139, 0.3);
             transition-duration: 0.2s;
 		}
 	}
 	td {
         position: relative;
+		transition: all 0.1;
 		&:hover {
+			background-color: rgba(187, 148, 250, 0.329)!important;
+			transition-duration: 0.1s;
 			&:before {
 				content: "";
 				position: absolute;
@@ -71,9 +74,13 @@ tbody {
 				right: 0;
 				top: -9999px;
 				bottom: -9999px;
-				background-color: rgba(72, 57, 233, 0.2);
+				// background-color: rgba(72, 57, 233, 0.2);
 				z-index: -1;
 			}
 		}
 	}
 }
+
+// .expanded-cell {
+// 	transform: scale(1.1);
+// }
