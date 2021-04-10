@@ -225,3 +225,7 @@ def add_event():
     # now that the event is confirmed we just need to iterate over all the users in the event and add the event to their calendars, this code is a bit hacky sorry :(
     for user in event_of_interest:
         push_event_to_calendar(user["token"], requested_start, requested_end, event_of_interest)
+    
+    return jsonify({
+        "Status": "Successful"
+    }), 200
