@@ -287,6 +287,10 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
             }
         }
         setSchedule([...schedule]);
+        if (isOrganiser) {
+            saveNewEventSchedule([...schedule]);
+
+        }
     }
 
 

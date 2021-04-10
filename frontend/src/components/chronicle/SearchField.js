@@ -9,7 +9,7 @@ const SearchField = ({ startNewMeeting }) => {
             <div class="c-formContainer" style={{ margin: "0 auto" }}>
                 <form class="c-form" onSubmit={startNewMeeting}>
                     <input class="c-form__input" name="meetingName" placeholder="Event name" />
-                    <button type="submit" class="c-form__button">Go!</button>
+                    <button type="submit" class="c-form__button" style={{cursor: "pointer"}}>Go!</button>
                     <label class="c-form__toggle" for="location" data-title="Make a plan ⌚"></label>
                 </form>
             </div>

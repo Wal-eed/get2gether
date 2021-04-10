@@ -90,7 +90,7 @@ const Header = ({
             bottomDivider && 'has-bottom-divider'
           )}>
           {/* <Logo /> */}
-          <FaCalendarAlt onClick={() => window.location.reload()} style={{ fontSize: "200%" }} />
+          <FaCalendarAlt onClick={() => window.location.reload()} style={{ fontSize: "200%",cursor: "pointer" }} />
           {!hideNav &&
             <>
               <button

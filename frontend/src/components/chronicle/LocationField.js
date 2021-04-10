@@ -15,7 +15,7 @@ const SearchField = () => {
             <div class="c-formContainer" style={{ margin: "0 auto" }}>
                 <form class="c-form" onSubmit={setLocation}>
                     <input class="c-form__input" name="location" placeholder="Location" />
-                    <button type="submit" class="c-form__button">Set!</button>
+                    <button type="submit" class="c-form__button" style={{cursor: "pointer"}}>Set!</button>
                     <label class="c-form__toggle" for="checkbox" data-title="Where at? 🗺️"></label>
                 </form>
             </div>
