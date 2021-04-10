@@ -397,8 +397,8 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                             <h4 style={{textAlign: "left"}}>
                                 Legend:
                             </h4>
-                            <div style={{width: (participants * 40) + "px", backgroundColor: "whitesmoke", height: "40px", borderRadius: "10px"}}>
-                                {Array.from(Array(participants).keys()).map(i => {
+                            <div style={{width: ((participants + 1) * 40) + "px", backgroundColor: "whitesmoke", height: "40px", borderRadius: "10px"}}>
+                                {Array.from(Array(participants + 1).keys()).map(i => {
                                     return (
                                         <div style={{display: "inline-block", 
                                         width: "32px", 
@@ -406,7 +406,7 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                                         height: "30px", 
                                         backgroundColor: `rgb(0, ${hues[i]}, 0)`,  // WALEED COME HERE
                                         borderRadius: "10px"}}>
-                                            {i+1}/{participants}
+                                            {i}/{participants}
                                         </div>
                                     )
                                 })}
