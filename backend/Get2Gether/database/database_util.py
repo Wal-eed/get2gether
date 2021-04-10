@@ -5,22 +5,26 @@ from flask import (
     current_app as app
 )
 
-# TODO: implement all these database functions
-# Pretty sure jsonify and json.load return dicts right?
-# ¯\_(ツ)_/¯
-
-# commit_data_to_key just stores the data into our json file
-def commit_data_to_key(source_file: str, requested_key: str, data: dict) -> bool:
+# Adds data to the list (of users or events)
+# Doesn't update existing items
+def commit_data_to_key(source_file: str, requested_key: str, data: dict):
     database = get_json_file(source_file)
 
-    # Adds data to the list (e.g. of users or of events)
-    # Doesn't actually update existing items
     database[requested_key].append(data)
 
     save_json_file(source_file, database)
-    
-    # Is this supposed to return something?
 
+# Finds an item in a list (of users or events)
+# Updates that item with the given data
+def commit_data_with_id(source_file: str, requested_key: str, requested_id: int, data: dict):
+    database = get_json_file(source_file)
+
+    item = next((x for x in database[requested_key] if x["id"] == requested_id), None)
+
+    if item is not None:
+        item.update(data)
+
+    save_json_file(source_file, database)
 
 def get_json_file(source_file: str) -> dict:
     source_url = json_url(source_file)
