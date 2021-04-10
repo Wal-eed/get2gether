@@ -2,7 +2,7 @@
     "users": [
         {
             "name": "Jack",
-            "id": 123456789,
+            "internal_uid": 123456789,
             "token": 123456789,
             "email": "",
             "phone": "",
