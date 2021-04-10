@@ -13,6 +13,7 @@ import LocationField from "../chronicle/LocationField";
 import Timetable from '../chronicle/Timetable';
 import DaysSelector from '../chronicle/DaysSelector';
 
+import Checkbox from '@material-ui/core/Checkbox';
 
 import {
   FaCopy
@@ -71,13 +72,14 @@ const Hero = ({
   const [page, setPage] = useState("start");
   const [meetingName, setMeetingName] = useState(window.localStorage.getItem("eventName") ? window.localStorage.getItem("eventName") : null);
   const [isOrganiser, setIsOrganiser] = useState(null);
+  const [isOnline, setIsOnline] = useState(null);
 
   const startNewMeeting = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target); 
     setMeetingName(formData.get("meetingName"));
     window.localStorage.setItem("eventName", formData.get("meetingName"));
-    setPage("day-selection");
+    setPage("location");
   }
 
   return (
@@ -116,7 +118,7 @@ const Hero = ({
                     <h3>Fill in your availability for <span className="glow">
                         {meetingName}
                       </span></h3>
-                    <Timetable isOrganiser={isOrganiser} allowAutofill={true} setPage={setPage} />
+                    <Timetable isOrganiser={isOrganiser} allowAutofill={true} setPage={setPage} showTimeRange={false} />
                     <hr />
                   </FadeIn>
                 )}
@@ -127,7 +129,7 @@ const Hero = ({
                       </span>!</h4>
                     <hr />
                     <h3>Everyone's Availabilities</h3>
-                    <Timetable defaultSchedule={JSON.parse(window.localStorage.getItem("schedule"))} isOrganiser={isOrganiser} participants={5} showLegend={true} modifiable={false} showTimeRange={false} />
+                    <Timetable defaultSchedule={JSON.parse(window.localStorage.getItem("schedule"))} isOrganiser={isOrganiser} participants={5} showLegend={true} showMap={!isOnline} modifiable={false} showTimeRange={false} />
                     <Button color="primary" onClick={() => window.location.reload()} style={{margin: "10px"}}>Back to start</Button>
                   </FadeIn>
                 )}
@@ -151,11 +153,30 @@ const Hero = ({
                       <div style={{marginTop: "150px"}}>
                         <SearchField startNewMeeting={startNewMeeting} />
                       </div>
-                      <div style={{marginTop: "60px"}}>
-                        <LocationField />
-                      </div>
                     </div>
                   </FadeIn>
+                )}
+                {(page === "location") && (
+                  <>
+                    <div style={{marginTop: "200px"}}>
+                      <Checkbox
+                        color="default"
+                        checked={isOnline}
+                        onChange={(event) => setIsOnline(event.target.checked)}
+                      />
+                      Is it online?
+                    </div>
+                    <div style={{marginTop: "20px"}}>
+                    {!isOnline && (
+                      <LocationField  />
+                    )}
+
+                    </div>
+                    <div style={{marginTop: "20px"}}>
+                    <Button color="primary" onClick={() => setPage("day-selection")} style={{margin: "10px"}}>Plan time</Button>
+
+                    </div>
+                  </>
                 )}
                 {(page === "day-selection") && (
                   <FadeIn
@@ -179,7 +200,7 @@ const Hero = ({
                     delay={400}
                     transitionDuration={1000}
                   >
-                    <Timetable isOrganiser={isOrganiser} />
+                    <Timetable isOrganiser={isOrganiser} allowAutofill={true} setPage={setPage} showMap={!isOnline} />
                     <div>
                       <Button color="primary" onClick={() => setPage("day-selection")} style={{margin: "10px"}}>Back</Button>
                       <Button color="primary" onClick={() => setPage("invite")} style={{margin: "10px"}}>Next</Button>

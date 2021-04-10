@@ -7,7 +7,6 @@ const SearchField = () => {
         event.preventDefault();
         const formData = new FormData(event.target);
         window.localStorage.setItem("location", formData.get("location"));
-        alert(formData.get('location'));
     }
 
     return (

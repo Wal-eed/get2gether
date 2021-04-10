@@ -7,7 +7,7 @@ import TimerangeSlider from './TimerangeSlider';
 
 
 
-const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, showLegend, modifiable=true, allowAutofill=false, setPage, canConfirmEvent=false, showTimeRange=true }) => {
+const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, showLegend, modifiable=true, allowAutofill=false, setPage, canConfirmEvent=false, showTimeRange=true, showMap=false }) => {
     
     const defaultDays = [
         "",
@@ -69,10 +69,12 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
         setConfirmEventModalActive(false);
     }   
 
-    const adjustTimeRange = () => {
+    const adjustTimeRange = (start, end) => {
         // setDays(
         //     days.slice(startTimeIndex, endTimeIndex + 1)
         // )
+        setStartTime(start);
+        setEndTime(end);
         setTimes(
             defaultTimes.slice(startTimeIndex, endTimeIndex)
         );
@@ -320,7 +322,18 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                 {(!isScheduled) && (
                     <>
                         {showTimeRange && (
-                            <TimerangeSlider startTimeIndex={startTimeIndex} setStartTime={setStartTime} endTimeIndex={endTimeIndex} setEndTime={setEndTime} adjustTimeRange={adjustTimeRange} />
+                            <>
+                                <TimerangeSlider startTimeIndex={startTimeIndex} setStartTime={setStartTime} endTimeIndex={endTimeIndex} setEndTime={setEndTime} adjustTimeRange={adjustTimeRange} />
+                                <div>
+                                <span style={{margin: "20px"}}>
+                                    {defaultTimes[startTimeIndex]}
+                                </span>
+                                -
+                                <span style={{margin: "20px"}}>
+                                    {defaultTimes[endTimeIndex]}
+                                </span>
+                                </div>
+                            </>
                         )}
                         <table onMouseDown={() => setIsMouseDown(true)} onMouseUp={() => setIsMouseDown(false)}>
                             <thead>
@@ -348,14 +361,14 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                                                         className={`time-brick noselect ${schedule[row][col] && "time-brick-selected"} ${!modifiable && "expanded-cell"}`} 
                                                         style={
                                                             (!modifiable) ? ({
-                                                                backgroundColor: `rgba(0, 0, ${hues[schedule[row][col]]}, ${opacities[schedule[row][col]]})`
+                                                                backgroundColor: `rgba(0, ${hues[schedule[row][col]]}, 0, ${opacities[schedule[row][col]]})`  // WALEED COME HERE
                                                             }) : ({})
                                                         }
                                                         onMouseOver={() => handleSelectTime(row, col)}
                                                         onMouseDown={() => handleSelectTime(row, col, true)}
                                                         onClick={(e) => handleScheduleEvent(e, row, col)}
                                                     >
-                                                        {schedule[row][col]}
+                                                        {/* {schedule[row][col]} */}
                                                     </td>
                                                 );
                                             }
@@ -370,7 +383,9 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                             <Button color="primary" onClick={() => autofill(0)} style={{margin: "10px"}}>Auto-Fill From Calendar</Button> 
                             <Button color="primary" onClick={() => autofill(1)} style={{margin: "10px"}}>Work Preset</Button> 
                             <Button color="primary" onClick={() => autofill(2)} style={{margin: "10px"}}>Uni Preset</Button> 
-                            <Button color="info" onClick={() => overlayThisSchedule(schedule)} style={{margin: "10px"}}>Save</Button> 
+                            {!isOrganiser && (
+                                <Button color="info" onClick={() => overlayThisSchedule(schedule)} style={{margin: "10px"}}>Save</Button> 
+                            )}
                         </>
                     )}
                     {showLegend && (
@@ -381,7 +396,12 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                             <div style={{width: (participants * 40) + "px", backgroundColor: "whitesmoke", height: "40px", borderRadius: "10px"}}>
                                 {Array.from(Array(participants).keys()).map(i => {
                                     return (
-                                        <div style={{display: "inline-block", width: "32px", margin: "4px", height: "30px", backgroundColor: `rgb(0, 0, ${hues[i]})`, borderRadius: "10px"}}>
+                                        <div style={{display: "inline-block", 
+                                        width: "32px", 
+                                        margin: "4px", 
+                                        height: "30px", 
+                                        backgroundColor: `rgb(0, ${hues[i]}, 0)`,  // WALEED COME HERE
+                                        borderRadius: "10px"}}>
                                             {i+1}/{participants}
                                         </div>
                                     )
@@ -389,15 +409,17 @@ const Timetable = ({ isOrganiser, meetingName, defaultSchedule, participants=5, 
                             </div>
                         </div>
                     )}
-                    <iframe
-                        width="100%"
-                        height="500px"
-                        // style="border:0"
-                        loading="lazy"
-                        allowfullscreen
-                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBjeL-5oS9102g1BbWRcmoAB2tx2tY_Au4&q=${window.localStorage.getItem("location") || "unsw"}`}
-                    >
-                    </iframe>
+                    {(showMap) && (
+                        <iframe
+                            width="100%"
+                            height="500px"
+                            // style="border:0"
+                            loading="lazy"
+                            allowfullscreen
+                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBjeL-5oS9102g1BbWRcmoAB2tx2tY_Au4&q=${window.localStorage.getItem("location") || "unsw"}`}
+                        >
+                        </iframe>
+                    )}
                     <Modal
                         show={confirmEventModalActive}
                         handleClose={closeModal}

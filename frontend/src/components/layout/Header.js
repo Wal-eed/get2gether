@@ -123,7 +123,8 @@ const Header = ({
                             </>
                           ) : (
                             <>
-                              <FaGoogle style={{"margin-right": "15px"}} /> Google Sign In 
+                              {/* <FaGoogle style={{"margin-right": "15px"}} /> Google Sign In  */}
+                              John Smith
                             </>
                           )}
                         </Link>

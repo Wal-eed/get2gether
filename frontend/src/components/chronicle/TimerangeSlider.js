@@ -13,19 +13,17 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-export default function RangeSlider({ startTimeIndex, setStartTime, endTimeIndex, setEndTime, adjustTimeRange }) {
+export default function RangeSlider({ startTimeIndex, setTimerange, endTimeIndex, adjustTimeRange }) {
   const classes = useStyles();
   const [value, setValue] = React.useState([startTimeIndex, endTimeIndex]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setStartTime(newValue[0]);
-    setEndTime(newValue[1]);
-    adjustTimeRange();
+    adjustTimeRange(newValue[0], newValue[1]);
   };
 
   return (
-    <div className={classes.root} style={{display: "inline-block"}}>
+    <div className={classes.root} style={{display: "inline-block", width: "500px"}}>
       <Typography id="range-slider" gutterBottom>
         Time range
       </Typography>
