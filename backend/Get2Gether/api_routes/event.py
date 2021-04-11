@@ -56,7 +56,6 @@ def push_event_to_calendar(user_google_token: str, time_start: time.time, time_e
 # get_event fetches the event data for an event with a specific ID
 @event_router.route("/event/get", methods=["GET"])
 def get_event():
-
     # open up the event database and retrive the data    
     requested_id = int(request.args.get("event_id"))
     event_database = database_util.get_json_file("event_data")
@@ -180,7 +179,7 @@ def add_event():
 
 # confirm_event is an endpoint called by the event organiser to confirm a time for the event
 @event_router.route("/event/confirm_time", methods=["POST"])
-def add_event():
+def confirm_event():
     # get the post form
     req = request.form
     requested_event_id = req.get("event_id")
