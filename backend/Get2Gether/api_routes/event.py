@@ -1,4 +1,3 @@
-import uuid
 from flask import (
     Blueprint,
     json,
@@ -8,10 +7,11 @@ from flask import (
 )
 from Get2Gether.database import database_util
 import time
+import uuid
+
 
 event_router = Blueprint("event", __name__)
 DOMAIN_NAME = "localhost:5000"
-
 
 
 # sends an email to all the invitees
@@ -51,7 +51,6 @@ def push_event_to_calendar(user_google_token: str, time_start: time.time, time_e
         },
     }
     push_to_cal(jsonify(event))
-
 
 
 # get_event fetches the event data for an event with a specific ID
@@ -97,7 +96,6 @@ def get_event():
         }), 200
 
 
-
 # registers a user to a specific event
 @event_router.route("/event/register", methods=["POST"])
 def event_register():
@@ -128,7 +126,6 @@ def event_register():
     return jsonify({
         "Status": "Successful"
     }), 200
-
 
 
 # add_event adds an event to the database as requested by an organizer
@@ -179,9 +176,6 @@ def add_event():
             "Invite_URL": "http://" + DOMAIN_NAME + "/event/join?event_id=" + str(event_id) # i guess the frontend can handle the final link location?
         }
     }), 200
-
-
-
 
 
 # confirm_event is an endpoint called by the event organiser to confirm a time for the event
