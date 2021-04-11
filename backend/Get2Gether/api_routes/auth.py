@@ -7,8 +7,8 @@ from Get2Gether.database import database_util
 import random
 import uuid
 
-auth_router = Blueprint("auth", __name__)
 
+auth_router = Blueprint("auth", __name__)
 
 
 # this is temporary test data 
@@ -38,7 +38,6 @@ def authenticate_with_google() -> dict:
     return google_user_ids[random.randint(1)]
 
 
-
 # is_returning_user just determines if the current user thats trying to log in is a user we've seen before
 # ideally the best way to do this is check their google email, if the google email already exists in our database then they're a returning user :)
 def is_returning_user(user_google_data: dict):
@@ -49,8 +48,6 @@ def is_returning_user(user_google_data: dict):
         if user["google_token"] == user_google_data["token"]:
             return (True, user)
     return (False, None)
-
-
 
 
 # registration handles the creation of a new user given their google details
@@ -81,7 +78,6 @@ def register():
     }), 200
 
 
-
 # login just authenticates a user and passes their authentication over to google OAuth
 @auth_router.route("/user/login", methods=["POST"])
 def login():
@@ -98,8 +94,6 @@ def login():
         return jsonify({
             "Status": "Successful",
         }), 200
-    
-
 
 
 # retrieve_user_data just gets the data associated with the currently logged in user
@@ -128,8 +122,6 @@ def retrieve_user_data():
     }), 404
 
 
-
-
 # retrieve_user_contacts does what it says
 @auth_router.route("/user/retrieve_contacts", methods=["GET"])
 def retrieve_user_contacts():
@@ -145,13 +137,3 @@ def retrieve_user_contacts():
             user_google_token = user["google_token"]
             # TODO: implement contact retrieval via google API
     return contacts
-
-
-
-
-
-
-
-
-
-

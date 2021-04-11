@@ -5,29 +5,17 @@ from flask import (
     json,
     session
 )
+from Get2Gether.database import database_util
 import time
 import math
-from Get2Gether.database import database_util
 
 
 schedule_router = Blueprint("schedule", __name__)
-
-'''
-Meeting 1:
-Monday :  9AM - 5PM
-Tuesday:  9AM - 5PM
-
-Meeting 2: 
-not Monday:  9AM - 5PM!
-not Tuesday!
-'''
-
 
 
 # pull_calendar_json just makes a request to the Google Calendar API and retrieves 
 def pull_calendar_json(user_google_token: str, week_start: time, week_end: time):
     pass
-
 
 
 # the core of this section, given a user's google key retrieves their calendar and blocked regions in the discussed
@@ -54,9 +42,6 @@ def get_user_google_calendar(user_google_token: str, week_start: time, week_end:
             for hour_block in range(math.ceil(event_start) - 1, math.floor(event_end)):
                 computed_calendar_matrix[day][hour_block] = 1
     return computed_calendar_matrix
-
-
-
 
 
 # get_schedule returns the schedule + presets for a specific user
@@ -90,9 +75,6 @@ def get_schedule():
         }}), 200
 
 
-
-
-
 # add_user_preset updates the user's presets and includes a new one as requested by the user
 @schedule_router.route("/user/add_user_preset", methods=["POST"])
 def add_user_preset():
@@ -114,8 +96,3 @@ def add_user_preset():
     return jsonify({
         "Status": "Successful",
     }), 200
-
-
-
-
-

@@ -1,9 +1,10 @@
-import json
-import os
 from flask import (
     json,
     current_app as app
 )
+import json
+import os
+
 
 # Adds data to the list (of users or events)
 # Doesn't update existing items
@@ -13,6 +14,7 @@ def commit_data_to_key(source_file: str, requested_key: str, data: dict):
     database[requested_key].append(data)
 
     save_json_file(source_file, database)
+
 
 # Finds an item in a list (of users or events)
 # Updates that item with the given data
@@ -25,6 +27,7 @@ def commit_data_with_id(source_file: str, requested_key: str, requested_id: int,
         item.update(data)
 
     save_json_file(source_file, database)
+
 
 def get_json_file(source_file: str) -> dict:
     source_url = json_url(source_file)
